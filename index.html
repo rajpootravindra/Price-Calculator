@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed 20% Profit Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        h2 {
+            margin-top: 0;
+            color: #1a1a1a;
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #4a4a4a;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .results-section {
+            margin-top: 25px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #333;
+        }
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+        .highlight-blue {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .highlight-green {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .warning-text {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <h2>20% Profit & Discount Calculator</h2>
+    
+    <div class="input-group">
+        <label for="purchase">Enter Purchase Price (₹)</label>
+        <input type="number" id="purchase" value="55" oninput="calculatePrice()">
+    </div>
+
+    <div class="input-group">
+        <label for="mrp">Enter MRP (₹)</label>
+        <input type="number" id="mrp" value="110" oninput="calculatePrice()">
+    </div>
+
+    <div class="results-section">
+        <div class="result-row">
+            <span>Your Selling Price (20% Profit):</span>
+            <span id="sellingPriceDisplay" class="highlight-blue">₹66.00</span>
+        </div>
+        <div class="result-row">
+            <span>Your Net Profit:</span>
+            <span id="profitDisplay" class="highlight-green">₹11.00</span>
+        </div>
+        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
+        <div class="result-row">
+            <span>Show Customer Off (₹ Value):</span>
+            <span id="discountCashDisplay" class="highlight-green">₹44.00 off</span>
+        </div>
+        <div class="result-row">
+            <span>Show Customer Off (% Value):</span>
+            <span id="discountPercentDisplay" class="highlight-green">40.00% off</span>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculatePrice() {
+    const purchasePrice = parseFloat(document.getElementById('purchase').value) || 0;
+    const mrp = parseFloat(document.getElementById('mrp').value) || 0;
+
+    // 1. Calculate selling price based STRICTLY on a fixed 20% profit margin
+    const sellingPrice = purchasePrice * 1.20;
+    const netProfit = sellingPrice - purchasePrice;
+
+    // 2. Calculate the discount details to show the customer
+    const discountCash = mrp - sellingPrice;
+    let discountPercent = 0;
+    if (mrp > 0) {
+        discountPercent = (discountCash / mrp) * 100;
+    }
+
+    // Update screen display
+    document.getElementById('sellingPriceDisplay').innerText = "₹" + sellingPrice.toFixed(2);
+    document.getElementById('profitDisplay').innerText = "₹" + netProfit.toFixed(2);
+    
+    const cashElement = document.getElementById('discountCashDisplay');
+    const percentElement = document.getElementById('discountPercentDisplay');
+
+    // Handle edge case if Selling Price is higher than MRP
+    if (discountCash < 0) {
+        cashElement.innerText = "MRP too low!";
+        cashElement.className = "warning-text";
+        percentElement.innerText = "No discount possible";
+        percentElement.className = "warning-text";
+    } else {
+        cashElement.innerText = "₹" + discountCash.toFixed(2) + " off";
+        cashElement.className = "highlight-green";
+        percentElement.innerText = discountPercent.toFixed(2) + "% off";
+        percentElement.className = "highlight-green";
+    }
+}
+
+// Initialize on page load
+calculatePrice();
+</script>
+
+</body>
+</html>
