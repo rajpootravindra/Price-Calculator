@@ -1,164 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed 20% Profit Calculator</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .calculator-card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-        }
-        h2 {
-            margin-top: 0;
-            color: #1a1a1a;
-            text-align: center;
-            font-size: 22px;
-            margin-bottom: 20px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #4a4a4a;
-            font-size: 14px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        .results-section {
-            margin-top: 25px;
-            background: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 15px;
-            border-radius: 4px;
-        }
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 15px;
-            color: #333;
-        }
-        .result-row:last-child {
-            margin-bottom: 0;
-        }
-        .highlight-blue {
-            font-weight: bold;
-            color: #007bff;
-        }
-        .highlight-green {
-            font-weight: bold;
-            color: #28a745;
-        }
-        .warning-text {
-            color: #dc3545;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foodzoid Price Calculator</title>
 
-<div class="calculator-card">
-    <h2>20% Profit & Discount Calculator</h2>
-    
-    <div class="input-group">
-        <label for="purchase">Enter Purchase Price (₹)</label>
-        <input type="number" id="purchase" value="55" oninput="calculatePrice()">
-    </div>
-
-    <div class="input-group">
-        <label for="mrp">Enter MRP (₹)</label>
-        <input type="number" id="mrp" value="110" oninput="calculatePrice()">
-    </div>
-
-    <div class="results-section">
-        <div class="result-row">
-            <span>Your Selling Price (20% Profit):</span>
-            <span id="sellingPriceDisplay" class="highlight-blue">₹66.00</span>
-        </div>
-        <div class="result-row">
-            <span>Your Net Profit:</span>
-            <span id="profitDisplay" class="highlight-green">₹11.00</span>
-        </div>
-        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
-        <div class="result-row">
-            <span>Show Customer Off (₹ Value):</span>
-            <span id="discountCashDisplay" class="highlight-green">₹44.00 off</span>
-        </div>
-        <div class="result-row">
-            <span>Show Customer Off (% Value):</span>
-            <span id="discountPercentDisplay" class="highlight-green">40.00% off</span>
-        </div>
-    </div>
-</div>
-
-<script>
-function calculatePrice() {
-    const purchasePrice = parseFloat(document.getElementById('purchase').value) || 0;
-    const mrp = parseFloat(document.getElementById('mrp').value) || 0;
-
-    // 1. Calculate selling price based STRICTLY on a fixed 20% profit margin
-    const sellingPrice = purchasePrice * 1.20;
-    const netProfit = sellingPrice - purchasePrice;
-
-    // 2. Calculate the discount details to show the customer
-    const discountCash = mrp - sellingPrice;
-    let discountPercent = 0;
-    if (mrp > 0) {
-        discountPercent = (discountCash / mrp) * 100;
-    }
-
-    // Update screen display
-    document.getElementById('sellingPriceDisplay').innerText = "₹" + sellingPrice.toFixed(2);
-    document.getElementById('profitDisplay').innerText = "₹" + netProfit.toFixed(2);
-    
-    const cashElement = document.getElementById('discountCashDisplay');
-    const percentElement = document.getElementById('discountPercentDisplay');
-
-    // Handle edge case if Selling Price is higher than MRP
-    if (discountCash < 0) {
-        cashElement.innerText = "MRP too low!";
-        cashElement.className = "warning-text";
-        percentElement.innerText = "No discount possible";
-        percentElement.className = "warning-text";
-    } else {
-        cashElement.innerText = "₹" + discountCash.toFixed(2) + " off";
-        cashElement.className = "highlight-green";
-        percentElement.innerText = discountPercent.toFixed(2) + "% off";
-        percentElement.className = "highlight-green";
-    }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-// Initialize on page load
-calculatePrice();
+body{
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+    background:#edf2f7;
+    padding:30px;
+}
+
+.container{
+    max-width:950px;
+    margin:auto;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:5px;
+    color:#222;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:18px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:#333;
+}
+
+input{
+    padding:13px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+    transition:.25s;
+}
+
+input:focus{
+    border-color:#0d6efd;
+    outline:none;
+}
+
+.results{
+    margin-top:35px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:18px;
+}
+
+.box{
+    background:#f8f9fa;
+    border-radius:12px;
+    padding:18px;
+    border-left:5px solid #0d6efd;
+}
+
+.box h3{
+    font-size:15px;
+    color:#666;
+    margin-bottom:10px;
+}
+
+.value{
+    font-size:30px;
+    font-weight:bold;
+    color:#111;
+}
+
+.green{
+    color:#28a745;
+}
+
+.red{
+    color:#dc3545;
+}
+
+.orange{
+    color:#ff9800;
+}
+
+.warning{
+    margin-top:25px;
+    padding:16px;
+    border-radius:10px;
+    display:none;
+    background:#ffe5e5;
+    color:#c62828;
+    font-weight:bold;
+}
+
+.copyBtn{
+    margin-top:25px;
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#0d6efd;
+    color:#fff;
+    cursor:pointer;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.copyBtn:hover{
+    background:#0b5ed7;
+}
+
+.footer{
+    margin-top:30px;
+    background:#eef8ff;
+    padding:18px;
+    border-radius:12px;
+    line-height:1.8;
+}
+
+.footer span{
+    font-weight:bold;
+}
+
+@media(max-width:600px){
+
+.card{
+padding:20px;
+}
+
+.value{
+font-size:24px;
+}
+
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>🍔 Foodzoid Price Calculator</h1>
+
+<div class="subtitle">
+Calculate Selling Price based on Foodzoid Commission & Vendor Contribution
+</div>
+
+<div class="grid">
+
+<div class="input-group">
+<label>Vendor Menu Price (₹)</label>
+<input
+id="vendorPrice"
+type="number"
+value="80"
+oninput="calculate()">
+</div>
+
+<div class="input-group">
+<label>MRP (₹)</label>
+<input
+id="mrp"
+type="number"
+value="120"
+oninput="calculate()">
+</div>
+
+<div class="input-group">
+<label>Foodzoid Commission (%)</label>
+<input
+id="foodzoidPercent"
+type="number"
+value="20"
+oninput="calculate()">
+</div>
+
+<div class="input-group">
+<label>Vendor Contribution (%)</label>
+<input
+id="vendorContribution"
+type="number"
+value="0"
+oninput="calculate()">
+</div>
+
+</div>
+
+<div class="results">
+
+<div class="box">
+<h3>Customer Selling Price</h3>
+<div id="sellingPrice" class="value green">
+₹0
+</div>
+</div>
+
+<div class="box">
+<h3>Vendor Receives</h3>
+<div id="vendorGets" class="value">
+₹0
+</div>
+</div>
+
+<div class="box">
+<h3>Foodzoid Commission</h3>
+<div id="commissionAmount" class="value orange">
+₹0
+</div>
+</div>
+
+<div class="box">
+<h3>Vendor Contribution</h3>
+<div id="vendorContributionAmount" class="value red">
+₹0
+</div>
+</div>
+
+<div class="box">
+<h3>Extra Price Added</h3>
+<div id="priceIncrease" class="value">
+₹0
+</div>
+</div>
+
+<div class="box">
+<h3>Customer Discount</h3>
+<div id="discount" class="value green">
+₹0 (0%)
+</div>
+</div>
+
+</div>
+
+<div
+id="warning"
+class="warning">
+Selling Price is greater than MRP.
+</div>
+
+<button
+class="copyBtn"
+onclick="copyPrice()">
+📋 Copy Selling Price
+</button>
+
+<div class="footer">
+
+<div><span>Formula Used:</span></div>
+
+Vendor Contribution =
+Vendor Price × Vendor Contribution %
+
+<br><br>
+
+Vendor Required Payout =
+Vendor Price − Vendor Contribution
+
+<br><br>
+
+Selling Price =
+Vendor Required Payout ÷
+(1 − Foodzoid Commission %)
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+function money(v){
+    return "₹" + Number(v).toFixed(2);
+}
+
+function calculate(){
+
+    let vendorPrice = parseFloat(document.getElementById("vendorPrice").value) || 0;
+    let mrp = parseFloat(document.getElementById("mrp").value) || 0;
+
+    let foodzoidPercent = parseFloat(document.getElementById("foodzoidPercent").value) || 0;
+    let vendorContributionPercent = parseFloat(document.getElementById("vendorContribution").value) || 0;
+
+    // Convert percentage to decimal
+    let commissionRate = foodzoidPercent / 100;
+    let vendorRate = vendorContributionPercent / 100;
+
+    // Vendor contributes from their own menu price
+    let vendorContributionAmount = vendorPrice * vendorRate;
+
+    // Vendor finally wants this amount after Foodzoid deducts commission
+    let vendorRequiredPayout = vendorPrice - vendorContributionAmount;
+
+    // Prevent divide by zero
+    let sellingPrice = 0;
+
+    if(commissionRate >= 1){
+        sellingPrice = 0;
+    }else{
+        sellingPrice = vendorRequiredPayout / (1 - commissionRate);
+    }
+
+    // Foodzoid commission
+    let commissionAmount = sellingPrice * commissionRate;
+
+    // Vendor receives after commission
+    let vendorGets = sellingPrice - commissionAmount;
+
+    // Extra price added over vendor menu price
+    let extraPrice = sellingPrice - vendorPrice;
+
+    // Discount shown to customer
+    let discountAmount = mrp - sellingPrice;
+
+    let discountPercent = 0;
+
+    if(mrp > 0){
+        discountPercent = (discountAmount / mrp) * 100;
+    }
+
+    // ---------- Update UI ----------
+
+    document.getElementById("sellingPrice").innerHTML =
+        money(sellingPrice);
+
+    document.getElementById("vendorGets").innerHTML =
+        money(vendorGets);
+
+    document.getElementById("commissionAmount").innerHTML =
+        money(commissionAmount);
+
+    document.getElementById("vendorContributionAmount").innerHTML =
+        money(vendorContributionAmount);
+
+    document.getElementById("priceIncrease").innerHTML =
+        money(extraPrice);
+
+    // Discount
+
+    if(discountAmount >= 0){
+
+        document.getElementById("discount").innerHTML =
+            money(discountAmount) +
+            "<br><small>" +
+            discountPercent.toFixed(2) +
+            "% OFF</small>";
+
+    }else{
+
+        document.getElementById("discount").innerHTML =
+            "<span class='red'>MRP Too Low</span>";
+
+    }
+
+    // Warning
+
+    if(sellingPrice > mrp && mrp>0){
+
+        document.getElementById("warning").style.display="block";
+
+    }else{
+
+        document.getElementById("warning").style.display="none";
+
+    }
+
+}
+
+function copyPrice(){
+
+    let txt=document.getElementById("sellingPrice").innerText;
+
+    navigator.clipboard.writeText(
+        txt.replace("₹","")
+    );
+
+    alert("Selling Price Copied : " + txt);
+
+}
+
+calculate();
+
 </script>
 
 </body>
